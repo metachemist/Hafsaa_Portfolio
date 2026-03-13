@@ -43,6 +43,8 @@ local-*
 .claude
 .z-ai-config
 dev.log
+/.zscripts/dev.out.log
+/.zscripts/dev.pid
 test
 prompt
 
