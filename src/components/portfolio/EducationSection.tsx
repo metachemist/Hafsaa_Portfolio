@@ -13,18 +13,18 @@ const education = [
 
 const certifications = [
   {
-    title: 'IBM Generative AI Engineering',
-    issuer: 'Coursera',
-    period: '2025 – Present',
-    status: 'In Progress',
-    skills: ['Generative AI', 'LLM', 'Prompt Engineering', 'IBM Watson'],
+    title: 'IBM RAG and Agentic AI Professional Certificate',
+    issuer: 'IBM / Coursera',
+    period: '2025',
+    status: 'Completed',
+    skills: ['RAG', 'LangGraph', 'CrewAI', 'MCP Servers', 'Vector Search', 'Agentic AI'],
   },
   {
-    title: 'Introduction to Front-End Development',
-    issuer: 'Coursera',
-    period: '2023',
+    title: 'Generative AI: Prompt Engineering Basics',
+    issuer: 'IBM / Coursera',
+    period: '2025',
     status: 'Completed',
-    skills: ['HTML5', 'CSS3', 'JavaScript', 'Responsive Design'],
+    skills: ['Prompt Engineering', 'Chain-of-Thought', 'Few-Shot Learning', 'IBM Watson'],
   },
 ];
 

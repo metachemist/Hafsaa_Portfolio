@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   keywords: [siteConfig.name, "Software Developer", "AI Engineer", "Next.js", "TypeScript", "TailwindCSS", "Web Development", "Frontend Developer", "Full Stack", "Portfolio"],
   authors: [{ name: siteConfig.name }],
   icons: {
-    icon: siteConfig.avatarUrl,
+    icon: siteConfig.faviconUrl,
   },
   openGraph: {
     title: `${siteConfig.name} | ${siteConfig.role}`,

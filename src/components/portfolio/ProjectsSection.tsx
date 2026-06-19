@@ -5,6 +5,103 @@ import { useEffect, useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { siteConfig } from '@/lib/site-config';
 
+interface FeaturedProject {
+  name: string;
+  description: string;
+  tags: string[];
+  stack: string[];
+  highlight: string;
+}
+
+const featuredProjects: FeaturedProject[] = [
+  {
+    name: 'Full-Time Employee: Autonomous AI Agent',
+    description:
+      'A perception-planning-execution autonomous agent: PM2-managed Python watchers monitor Gmail and file drops, feed a Claude Code planning engine that classifies inputs and drafts action plans, and sync state to an Obsidian vault.',
+    tags: ['autonomous-agent', 'python', 'claude-api', 'playwright'],
+    stack: ['Python', 'Claude Code', 'Gmail API', 'LinkedIn API', 'Playwright', 'Odoo CRM', 'PM2', 'Docker'],
+    highlight: 'Dispatches actions across 6 platforms with file-based human-in-the-loop gating and JSONL audit logging.',
+  },
+  {
+    name: 'AI-Powered B2B Proposal Engine',
+    description:
+      'RAG-powered proposal generation pipeline in n8n: webhook ingests a client brief → GPT-4o-mini classifies metadata → brief is embedded and matched against a Supabase pgvector store → top-3 results injected as context → GPT-4o outputs a structured JSON proposal.',
+    tags: ['n8n', 'rag', 'gpt-4o', 'supabase'],
+    stack: ['n8n', 'GPT-4o', 'OpenAI Embeddings', 'Supabase pgvector', 'Google Slides API', 'Drive API', 'Gmail API'],
+    highlight: 'Fully automated document delivery: Slides → PDF → Drive → Gmail approve/reject webhook with zero manual formatting.',
+  },
+  {
+    name: 'Advanced B2B Cold Email Outreach Automation',
+    description:
+      '4-workflow n8n outreach system: daily trigger pulls and filters leads from Google Sheets, injects ICP-specific variables into HTML templates, and sends via Zoho Mail API with day-2 and day-3 follow-ups maintaining thread continuity.',
+    tags: ['n8n', 'email-automation', 'oauth2', 'zoho'],
+    stack: ['n8n', 'Zoho Mail API', 'Google Sheets', 'OAuth 2.0'],
+    highlight: 'Open-tracking webhook writes engagement events and PKT timestamps to CRM; randomized delays eliminate manual outreach effort.',
+  },
+  {
+    name: 'LinkedIn Carousel Automation',
+    description:
+      '13-node n8n pipeline that parses PDFs via PDF.co API, generates carousel copy with GPT-4o, and uploads to Google Drive — reducing creation time from hours to under 3 minutes with zero manual steps.',
+    tags: ['n8n', 'gpt-4o', 'pdf-processing', 'content-automation'],
+    stack: ['n8n', 'GPT-4o', 'PDF.co API', 'Google Drive'],
+    highlight: 'End-to-end automation: PDF parse → AI copy generation → Drive upload in under 3 minutes.',
+  },
+];
+
+const FeaturedProjectCard = ({ project, index }: { project: FeaturedProject; index: number }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.45, delay: index * 0.08 }}
+    className="rounded-lg overflow-hidden"
+    style={{ background: 'var(--ed-surface)', border: '1px solid var(--ed-border)' }}
+  >
+    <div className="h-0.5 w-full" style={{ background: 'var(--ed-accent)' }} />
+    <div className="p-6">
+      <div className="flex items-start gap-2 mb-1">
+        <span
+          className="text-xs px-2 py-0.5 rounded shrink-0 mt-0.5"
+          style={{ background: 'rgba(var(--ed-accent-rgb, 180,140,100),0.12)', color: 'var(--ed-accent)', border: '1px solid var(--ed-border)', fontFamily: 'var(--font-sans), sans-serif' }}
+        >
+          Featured
+        </span>
+      </div>
+      <h3
+        className="text-lg font-semibold leading-snug mt-2 mb-3"
+        style={{ color: 'var(--ed-text)', fontFamily: 'var(--font-serif), Playfair Display, serif' }}
+      >
+        {project.name}
+      </h3>
+      <p
+        className="text-sm mb-4"
+        style={{ color: 'var(--ed-muted)', fontFamily: 'var(--font-sans), sans-serif', lineHeight: '1.7' }}
+      >
+        {project.description}
+      </p>
+      <p
+        className="text-xs mb-5 italic"
+        style={{ color: 'var(--ed-text)', fontFamily: 'var(--font-sans), sans-serif', lineHeight: '1.6', opacity: 0.7 }}
+      >
+        {project.highlight}
+      </p>
+      <div className="flex flex-wrap gap-1.5 mb-5">
+        {project.tags.map((tag) => (
+          <span key={tag} className="ed-tag">{tag}</span>
+        ))}
+      </div>
+      <div
+        className="pt-4 flex flex-wrap gap-x-3 gap-y-1 text-xs"
+        style={{ color: 'var(--ed-muted)', fontFamily: 'var(--font-sans), sans-serif', borderTop: '1px solid var(--ed-border)' }}
+      >
+        {project.stack.map((s) => (
+          <span key={s}>{s}</span>
+        ))}
+      </div>
+    </div>
+  </motion.div>
+);
+
 interface Project {
   id: number;
   name: string;
@@ -149,7 +246,7 @@ export function ProjectsSection({ username }: ProjectsSectionProps) {
   }, [username]);
 
   const filtered = projects
-    .filter((p) => !p.fork && !p.archived)
+    .filter((p) => !p.fork && !p.archived && p.name !== 'portfolio')
     .sort((a, b) => {
       if (filter === 'starred') return b.stargazers_count - a.stargazers_count;
       if (filter === 'recent') return new Date(b.pushed_at).getTime() - new Date(a.pushed_at).getTime();
@@ -199,6 +296,33 @@ export function ProjectsSection({ username }: ProjectsSectionProps) {
             ))}
           </motion.div>
         </div>
+
+        {/* Featured automation projects from resume */}
+        <div className="mb-12">
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="section-label mb-6"
+          >
+            Automation & AI Pipelines
+          </motion.p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {featuredProjects.map((project, index) => (
+              <FeaturedProjectCard key={project.name} project={project} index={index} />
+            ))}
+          </div>
+        </div>
+
+        {/* GitHub repos */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="section-label mb-6"
+        >
+          Open Source
+        </motion.p>
 
         {error && (
           <div

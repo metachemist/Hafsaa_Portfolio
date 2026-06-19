@@ -15,20 +15,20 @@ interface Certification {
 
 const certifications: Certification[] = [
   {
-    title: 'IBM Generative AI Engineering',
-    issuer: 'Coursera',
-    date: '2025 - Present',
-    status: 'in-progress',
-    description: 'Gaining expertise in generative AI and cloud computing solutions. Covering advanced topics in AI model development, prompt engineering, and enterprise AI applications.',
-    skills: ['Generative AI', 'LLM', 'Prompt Engineering', 'Cloud Computing', 'IBM Watson'],
+    title: 'IBM RAG and Agentic AI Professional Certificate',
+    issuer: 'IBM / Coursera',
+    date: '2025',
+    status: 'completed',
+    description: 'Built end-to-end RAG pipelines from document ingestion and embedding to vector retrieval and LLM-grounded response generation. Built multi-agent systems using LangGraph and CrewAI with orchestration patterns like reflection, memory, and conditional logic. Completed a capstone designing a production-style multimodal RAG system combining structured data, retrieval evaluation strategies, and agentic workflows.',
+    skills: ['RAG', 'LangGraph', 'CrewAI', 'MCP Servers', 'Vector Search', 'Agentic AI'],
   },
   {
-    title: 'Introduction to Front-end Development',
-    issuer: 'Coursera',
-    date: '2023',
+    title: 'Generative AI: Prompt Engineering Basics',
+    issuer: 'IBM / Coursera',
+    date: '2025',
     status: 'completed',
-    description: 'Acquired foundational skills in HTML, CSS, and JavaScript. Learned responsive design principles and modern web development practices.',
-    skills: ['HTML5', 'CSS3', 'JavaScript', 'Responsive Design', 'Web Development'],
+    description: 'Learned zero-shot and few-shot prompting techniques to improve LLM output reliability. Practiced advanced methods: Chain-of-Thought, Tree-of-Thought, and Interview Pattern for structured, context-aware responses. Explored IBM Watson Prompt Lab, Spellbook, and Dust through hands-on labs.',
+    skills: ['Prompt Engineering', 'Chain-of-Thought', 'Few-Shot Learning', 'IBM Watson', 'LLMs'],
   },
 ];
 
