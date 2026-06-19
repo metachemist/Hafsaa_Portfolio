@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Github, Linkedin, Mail, MapPin } from 'lucide-react';
 
 interface ContactSectionProps {
   email: string;
@@ -10,111 +9,111 @@ interface ContactSectionProps {
   location: string;
 }
 
-const SocialLink = ({
-  href,
-  icon: Icon,
-  label,
-  delay,
-}: {
-  href: string;
-  icon: React.ElementType;
-  label: string;
-  delay: number;
-}) => (
-  <motion.a
-    href={href}
-    target="_blank"
-    rel="noopener noreferrer"
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ delay }}
-    whileHover={{ scale: 1.05, y: -4 }}
-    className="flex items-center gap-4 p-5 glass rounded-xl card-hover group"
-  >
-    <div className="p-3 rounded-lg bg-portfolio-primary/20 group-hover:bg-portfolio-primary/40 transition-colors">
-      <Icon className="w-6 h-6 text-portfolio-highlight" />
-    </div>
-    <div>
-      <p className="text-sm text-muted-foreground">{label}</p>
-      <p className="text-white font-medium group-hover:text-portfolio-highlight transition-colors">
-        {href.replace('mailto:', '').replace('https://', '').replace('http://', '')}
-      </p>
-    </div>
-  </motion.a>
-);
-
 export function ContactSection({ email, github, linkedin, location }: ContactSectionProps) {
+  const links = [
+    { label: 'Email', value: email, href: `mailto:${email}` },
+    { label: 'GitHub', value: 'github.com/metachemist', href: github },
+    { label: 'LinkedIn', value: 'linkedin.com/in/hafsashahid03', href: linkedin },
+    { label: 'Location', value: location, href: undefined },
+  ];
+
   return (
-    <section id="contact" className="py-20 px-4 relative">
-      <div className="container mx-auto max-w-4xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold gradient-text mb-4">
-            Get In Touch
-          </h2>
-          <p className="text-muted-foreground max-w-xl mx-auto">
-            I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions
-          </p>
-        </motion.div>
+    <section id="contact" className="py-24 px-6" style={{ borderTop: '1px solid var(--ed-border)' }}>
+      <div className="container mx-auto max-w-6xl">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
+          <div>
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="section-label mb-8"
+            >
+              Contact
+            </motion.p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-          <SocialLink
-            href={`mailto:${email}`}
-            icon={Mail}
-            label="Email"
-            delay={0.1}
-          />
-          <SocialLink
-            href={github}
-            icon={Github}
-            label="GitHub"
-            delay={0.2}
-          />
-          <SocialLink
-            href={linkedin}
-            icon={Linkedin}
-            label="LinkedIn"
-            delay={0.3}
-          />
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4 }}
-            className="flex items-center gap-4 p-5 glass rounded-xl"
-          >
-            <div className="p-3 rounded-lg bg-portfolio-primary/20">
-              <MapPin className="w-6 h-6 text-portfolio-highlight" />
+            <motion.h2
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.05 }}
+              className="text-5xl md:text-6xl font-semibold mb-6 leading-tight"
+              style={{ fontFamily: 'var(--font-serif), Playfair Display, serif', color: 'var(--ed-text)' }}
+            >
+              Thank you.
+            </motion.h2>
+
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-base leading-relaxed mb-8"
+              style={{ color: 'var(--ed-muted)', fontFamily: 'var(--font-sans), sans-serif', lineHeight: '1.75', maxWidth: '380px' }}
+            >
+              I'm always open to new projects, collaborations, or just a conversation about technology and design.
+            </motion.p>
+
+            <motion.a
+              href={`mailto:${email}`}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.15 }}
+              className="inline-block px-6 py-3 text-sm font-medium rounded transition-opacity hover:opacity-80"
+              style={{
+                background: 'var(--ed-text)',
+                color: 'var(--ed-bg)',
+                fontFamily: 'var(--font-sans), sans-serif',
+              }}
+            >
+              Say hello →
+            </motion.a>
+          </div>
+
+          <div>
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="section-label mb-8"
+            >
+              Links
+            </motion.p>
+
+            <div className="space-y-0" style={{ borderTop: '1px solid var(--ed-border)' }}>
+              {links.map((link, i) => (
+                <motion.div
+                  key={link.label}
+                  initial={{ opacity: 0, y: 8 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.07 }}
+                  className="flex items-center justify-between py-4"
+                  style={{ borderBottom: '1px solid var(--ed-border)' }}
+                >
+                  <span className="text-sm" style={{ color: 'var(--ed-muted)', fontFamily: 'var(--font-sans), sans-serif' }}>
+                    {link.label}
+                  </span>
+                  {link.href ? (
+                    <a
+                      href={link.href}
+                      target={link.href.startsWith('mailto') ? undefined : '_blank'}
+                      rel="noopener noreferrer"
+                      className="text-sm transition-opacity hover:opacity-60"
+                      style={{ color: 'var(--ed-text)', fontFamily: 'var(--font-sans), sans-serif' }}
+                    >
+                      {link.value}
+                    </a>
+                  ) : (
+                    <span className="text-sm" style={{ color: 'var(--ed-text)', fontFamily: 'var(--font-sans), sans-serif' }}>
+                      {link.value}
+                    </span>
+                  )}
+                </motion.div>
+              ))}
             </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Location</p>
-              <p className="text-white font-medium">{location}</p>
-            </div>
-          </motion.div>
+          </div>
         </div>
-
-        {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="text-center"
-        >
-          <motion.a
-            href={`mailto:${email}`}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-portfolio-primary via-portfolio-highlight to-portfolio-accent text-white rounded-lg font-medium text-lg transition-all hover:shadow-glow-primary btn-glow"
-          >
-            <Mail className="w-5 h-5" />
-            Say Hello
-          </motion.a>
-        </motion.div>
       </div>
     </section>
   );

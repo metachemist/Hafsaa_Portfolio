@@ -1,42 +1,31 @@
 'use client';
 
-import { ParticleBackground } from '@/components/portfolio/ParticleBackground';
 import { HeroSection } from '@/components/portfolio/HeroSection';
+import { EducationSection } from '@/components/portfolio/EducationSection';
+import { TechStackSection } from '@/components/portfolio/TechStackSection';
+import { ProjectsSection } from '@/components/portfolio/ProjectsSection';
 import { StatsDashboard } from '@/components/portfolio/StatsDashboard';
 import { ContributionHeatmap } from '@/components/portfolio/ContributionHeatmap';
-import { ProjectsSection } from '@/components/portfolio/ProjectsSection';
-import { TechStackSection } from '@/components/portfolio/TechStackSection';
-import { CertificationsSection } from '@/components/portfolio/CertificationsSection';
 import { ActivityFeed } from '@/components/portfolio/ActivityFeed';
+import { FunFactsSection } from '@/components/portfolio/FunFactsSection';
 import { ContactSection } from '@/components/portfolio/ContactSection';
 import { Navigation } from '@/components/portfolio/Navigation';
 import { Footer } from '@/components/portfolio/Footer';
-import { CatCursor } from '@/components/portfolio/CatCursor';
 import { siteConfig } from '@/lib/site-config';
 
 const sections = [
   { id: 'hero', label: 'Home' },
-  { id: 'stats', label: 'Stats' },
+  { id: 'education', label: 'About' },
+  { id: 'techstack', label: 'Skills' },
   { id: 'projects', label: 'Projects' },
-  { id: 'techstack', label: 'Tech Stack' },
-  { id: 'certifications', label: 'Certifications' },
-  { id: 'activity', label: 'Activity' },
   { id: 'contact', label: 'Contact' },
 ];
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen bg-portfolio-bg overflow-x-hidden">
-      {/* Animated background particles */}
-      <ParticleBackground />
+    <main style={{ background: 'var(--ed-bg)', minHeight: '100vh' }}>
+      <Navigation sections={sections} githubUrl={siteConfig.githubUrl} email={siteConfig.email} />
 
-      {/* Animated cursor companion */}
-      <CatCursor size={38} />
-
-      {/* Navigation */}
-      <Navigation sections={sections} githubUrl={siteConfig.githubUrl} />
-
-      {/* Hero Section */}
       <HeroSection
         name={siteConfig.name}
         title={siteConfig.role}
@@ -46,25 +35,20 @@ export default function Home() {
         resumeUrl={siteConfig.resumeUrl}
       />
 
-      {/* GitHub Stats Dashboard */}
-      <StatsDashboard username={siteConfig.githubUsername} />
+      <EducationSection />
 
-      {/* Contribution Heatmap */}
-      <ContributionHeatmap username={siteConfig.githubUsername} />
-
-      {/* Projects Section */}
-      <ProjectsSection username={siteConfig.githubUsername} />
-
-      {/* Tech Stack */}
       <TechStackSection username={siteConfig.githubUsername} />
 
-      {/* Certifications */}
-      <CertificationsSection />
+      <ProjectsSection username={siteConfig.githubUsername} />
 
-      {/* Activity Feed */}
+      <StatsDashboard username={siteConfig.githubUsername} />
+
+      <ContributionHeatmap username={siteConfig.githubUsername} />
+
       <ActivityFeed username={siteConfig.githubUsername} />
 
-      {/* Contact Section */}
+      <FunFactsSection />
+
       <ContactSection
         email={siteConfig.email}
         github={siteConfig.githubUrl}
@@ -72,7 +56,6 @@ export default function Home() {
         location={siteConfig.location}
       />
 
-      {/* Footer */}
       <Footer name={siteConfig.name} />
     </main>
   );

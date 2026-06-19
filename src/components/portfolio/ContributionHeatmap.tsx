@@ -37,7 +37,7 @@ interface ContributionHeatmapProps {
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-const getContributionLevel = (count: number): 0 | 1 | 2 | 3 | 4 => {
+const getLevel = (count: number): 0 | 1 | 2 | 3 | 4 => {
   if (count === 0) return 0;
   if (count <= 3) return 1;
   if (count <= 6) return 2;
@@ -45,49 +45,23 @@ const getContributionLevel = (count: number): 0 | 1 | 2 | 3 | 4 => {
   return 4;
 };
 
+const cellColors = [
+  'rgba(240,235,225,0.04)',
+  'rgba(201,184,150,0.2)',
+  'rgba(201,184,150,0.4)',
+  'rgba(201,184,150,0.7)',
+  '#c9b896',
+];
+
 const formatMonthLabels = (weeks: ContributionWeek[]) => {
-  let lastRenderedMonth = '';
-
-  return weeks.map((week, weekIndex) => {
-    const firstDay = new Date(`${week.firstDay}T00:00:00Z`);
-    const monthLabel = firstDay.toLocaleString('en-US', {
-      month: 'short',
-      timeZone: 'UTC',
-    });
-    const shouldRender = weekIndex === 0 || monthLabel !== lastRenderedMonth;
-
-    if (shouldRender) {
-      lastRenderedMonth = monthLabel;
-    }
-
-    return shouldRender ? monthLabel : '';
+  let last = '';
+  return weeks.map((week, i) => {
+    const d = new Date(`${week.firstDay}T00:00:00Z`);
+    const m = d.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' });
+    const show = i === 0 || m !== last;
+    if (show) last = m;
+    return show ? m : '';
   });
-};
-
-const ContributionCell = ({ day, delay }: { day: ContributionDay; delay: number }) => {
-  const levelColors = [
-    'bg-[#161b22]',
-    'bg-[#0e4429]',
-    'bg-[#006d32]',
-    'bg-[#26a641]',
-    'bg-[#39d353]',
-  ];
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.16, delay }}
-      whileHover={{ scale: 1.25, zIndex: 10 }}
-      className={`h-[11px] w-[11px] rounded-[2px] ${levelColors[day.level]} relative cursor-pointer transition-transform group`}
-      title={`${day.count} contributions on ${day.date}`}
-    >
-      <div className="absolute bottom-full left-1/2 z-20 mb-2 -translate-x-1/2 whitespace-nowrap rounded bg-popover px-2 py-1 text-xs text-popover-foreground opacity-0 transition-opacity pointer-events-none group-hover:opacity-100">
-        {day.count} contributions on {day.date}
-      </div>
-    </motion.div>
-  );
 };
 
 export function ContributionHeatmap({ username }: ContributionHeatmapProps) {
@@ -97,83 +71,37 @@ export function ContributionHeatmap({ username }: ContributionHeatmapProps) {
 
   useEffect(() => {
     let isActive = true;
-
-    const fetchContributions = async () => {
+    const fetch_ = async () => {
       try {
-        const response = await fetch(`/api/github/contributions?username=${username}`, {
-          cache: 'no-store',
-        });
-        const result = await response.json();
-
-        if (!response.ok) {
-          throw new Error(result.error || 'Failed to fetch contributions.');
-        }
-
+        const res = await fetch(`/api/github/contributions?username=${username}`, { cache: 'no-store' });
+        const result = await res.json();
+        if (!res.ok) throw new Error(result.error || 'Failed to fetch contributions.');
         const weeks: ContributionWeek[] = (result.weeks as ApiContributionWeek[]).map((week) => ({
           firstDay: week.firstDay,
-          days: Array.from({ length: 7 }).map((_, dayIndex) => {
-            const day = week.contributionDays[dayIndex];
-
-            if (!day) {
-              return {
-                date: '',
-                count: 0,
-                level: 0 as const,
-              };
-            }
-
-            return {
-              date: day.date,
-              count: day.contributionCount,
-              level: getContributionLevel(day.contributionCount),
-            };
+          days: Array.from({ length: 7 }).map((_, dayIdx) => {
+            const day = week.contributionDays[dayIdx];
+            if (!day) return { date: '', count: 0, level: 0 as const };
+            return { date: day.date, count: day.contributionCount, level: getLevel(day.contributionCount) };
           }),
         }));
-
-        if (!isActive) {
-          return;
-        }
-
-        setData({
-          weeks,
-          totalContributions: result.totalContributions || 0,
-        });
-        setError(null);
-      } catch (error) {
-        console.error('Failed to fetch contributions:', error);
-
-        if (!isActive) {
-          return;
-        }
-
-        setError(
-          error instanceof Error ? error.message : 'Failed to fetch contributions.'
-        );
-        setData(null);
+        if (isActive) { setData({ weeks, totalContributions: result.totalContributions || 0 }); setError(null); }
+      } catch (err) {
+        if (isActive) { setError(err instanceof Error ? err.message : 'Failed to fetch.'); setData(null); }
       } finally {
-        if (isActive) {
-          setLoading(false);
-        }
+        if (isActive) setLoading(false);
       }
     };
-
-    fetchContributions();
-    const intervalId = window.setInterval(fetchContributions, siteConfig.refreshIntervalMs);
-
-    return () => {
-      isActive = false;
-      window.clearInterval(intervalId);
-    };
+    fetch_();
+    const id = window.setInterval(fetch_, siteConfig.refreshIntervalMs);
+    return () => { isActive = false; window.clearInterval(id); };
   }, [username]);
 
   if (loading) {
     return (
-      <section className="py-20 px-4">
+      <section className="py-24 px-6" style={{ borderTop: '1px solid var(--ed-border)' }}>
         <div className="container mx-auto max-w-6xl">
-          <div className="glass rounded-2xl p-8 animate-pulse">
-            <div className="h-8 w-1/3 rounded bg-portfolio-section mb-8" />
-            <div className="h-32 rounded bg-portfolio-section" />
-          </div>
+          <p className="section-label mb-12">Contributions</p>
+          <div className="h-32 rounded-lg animate-pulse" style={{ background: 'var(--ed-surface)' }} />
         </div>
       </section>
     );
@@ -181,81 +109,71 @@ export function ContributionHeatmap({ username }: ContributionHeatmapProps) {
 
   const monthLabels = data ? formatMonthLabels(data.weeks) : [];
   const weekCount = data?.weeks.length ?? 0;
-  const weekGridTemplate = data
-    ? { gridTemplateColumns: `repeat(${weekCount}, 11px)` }
-    : undefined;
+  const gridStyle = data ? { gridTemplateColumns: `repeat(${weekCount}, 11px)` } : undefined;
 
   return (
-    <section className="py-20 px-4 relative">
+    <section className="py-24 px-6" style={{ borderTop: '1px solid var(--ed-border)' }}>
       <div className="container mx-auto max-w-6xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          className="section-label mb-12"
         >
-          <h2 className="text-3xl md:text-4xl font-bold gradient-text mb-4">
-            Contribution Activity
-          </h2>
-          <p className="text-muted-foreground max-w-xl mx-auto">
-            Last 12 months, rendered to match GitHub&apos;s profile graph
-          </p>
-        </motion.div>
+          Contribution Activity
+        </motion.p>
 
         {error && (
-          <div className="glass rounded-2xl border border-amber-500/30 bg-amber-500/10 p-6 text-center text-amber-100">
+          <div
+            className="p-4 rounded-lg text-sm"
+            style={{ background: 'rgba(180,80,80,0.1)', border: '1px solid rgba(180,80,80,0.2)', color: '#f08080', fontFamily: 'var(--font-sans), sans-serif' }}
+          >
             {error}
           </div>
         )}
 
         {!error && data && (
-          <div className="flex justify-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="glass inline-block max-w-full overflow-x-auto rounded-2xl px-3 py-3 sm:px-4 sm:py-4"
-            >
-              <div className="w-fit min-w-max">
-              <div
-                className="mb-1.5 grid gap-0.5 pl-6"
-                style={weekGridTemplate}
-              >
-                {monthLabels.map((month, index) => (
-                  <div
-                    key={`${month}-${index}`}
-                    className="w-[11px] overflow-visible text-[10px] leading-none text-muted-foreground"
-                  >
-                    {month}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="overflow-x-auto"
+          >
+            <div className="inline-block min-w-max">
+              {/* Month labels */}
+              <div className="mb-1.5 grid gap-0.5 pl-6" style={gridStyle}>
+                {monthLabels.map((m, i) => (
+                  <div key={i} className="w-[11px] overflow-visible text-[10px] leading-none" style={{ color: 'var(--ed-muted)' }}>
+                    {m}
                   </div>
                 ))}
               </div>
 
               <div className="flex gap-1">
+                {/* Day labels */}
                 <div className="flex flex-col gap-0.5 pr-1">
-                  {DAYS.map((day, index) => (
+                  {DAYS.map((day, i) => (
                     <div
                       key={day}
-                      className="flex h-[11px] items-center text-[10px] leading-none text-muted-foreground"
-                      style={{ visibility: index % 2 === 1 ? 'visible' : 'hidden' }}
+                      className="flex h-[11px] items-center text-[10px] leading-none"
+                      style={{ color: 'var(--ed-muted)', visibility: i % 2 === 1 ? 'visible' : 'hidden' }}
                     >
                       {day}
                     </div>
                   ))}
                 </div>
 
-                <div
-                  className="grid gap-0.5"
-                  style={weekGridTemplate}
-                >
-                  {data.weeks.map((week, weekIndex) => (
+                {/* Cells */}
+                <div className="grid gap-0.5" style={gridStyle}>
+                  {data.weeks.map((week) => (
                     <div key={week.firstDay} className="grid gap-0.5">
-                      {week.days.map((day, dayIndex) => (
-                        <ContributionCell
-                          key={`${week.firstDay}-${dayIndex}`}
-                          day={day}
-                          delay={weekIndex * 0.008 + dayIndex * 0.004}
+                      {week.days.map((day, di) => (
+                        <div
+                          key={di}
+                          className="h-[11px] w-[11px] rounded-[2px] relative cursor-default group"
+                          style={{ background: cellColors[day.level] }}
+                          title={day.date ? `${day.count} contributions on ${day.date}` : ''}
                         />
                       ))}
                     </div>
@@ -263,37 +181,23 @@ export function ContributionHeatmap({ username }: ContributionHeatmapProps) {
                 </div>
               </div>
 
-              <div className="mt-4 flex items-center justify-between gap-4 text-xs text-muted-foreground">
-                <div>
-                  <span className="text-base font-bold text-portfolio-highlight">
+              <div className="mt-4 flex items-center justify-between text-xs" style={{ color: 'var(--ed-muted)', fontFamily: 'var(--font-sans), sans-serif' }}>
+                <span>
+                  <span style={{ color: 'var(--ed-text)', fontWeight: 600 }}>
                     {data.totalContributions.toLocaleString()}
                   </span>{' '}
                   contributions in the last year
-                </div>
+                </span>
                 <div className="flex items-center gap-1.5">
                   <span>Less</span>
-                  {[0, 1, 2, 3, 4].map((level) => (
-                    <div
-                      key={level}
-                      className={`h-3 w-3 rounded-[2px] ${
-                        level === 0
-                          ? 'bg-[#161b22]'
-                          : level === 1
-                          ? 'bg-[#0e4429]'
-                          : level === 2
-                          ? 'bg-[#006d32]'
-                          : level === 3
-                          ? 'bg-[#26a641]'
-                          : 'bg-[#39d353]'
-                      }`}
-                    />
+                  {cellColors.map((c, i) => (
+                    <div key={i} className="h-3 w-3 rounded-[2px]" style={{ background: c }} />
                   ))}
                   <span>More</span>
                 </div>
               </div>
-              </div>
-            </motion.div>
-          </div>
+            </div>
+          </motion.div>
         )}
       </div>
     </section>
