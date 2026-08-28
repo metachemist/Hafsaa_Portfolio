@@ -73,6 +73,7 @@ const createRestHeaders = (headers?: HeadersInit): HeadersInit => {
 
   return {
     Accept: GITHUB_ACCEPT_HEADER,
+    'User-Agent': 'portfolio-app',
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
     ...headers,
   };
@@ -104,7 +105,27 @@ const fetchGitHubREST = async (endpoint: string, options: RequestInit = {}) => {
   }
 
   return response.json();
-};
+}
+
+/**
+ * Like fetchGitHubREST, but resolves to `fallback` instead of throwing when the
+ * request fails. Used for supplementary activity data (commits, stars, forks)
+ * where a single forbidden or empty endpoint should not fail the whole feed —
+ * e.g. the stargazers endpoint returns 403 for fine-grained personal access
+ * tokens, and /commits returns 409 for empty repositories.
+ */
+const fetchGitHubRESTSafe = async <T>(
+  endpoint: string,
+  fallback: T,
+  options: RequestInit = {}
+): Promise<T> => {
+  try {
+    return await fetchGitHubREST(endpoint, options);
+  } catch (error) {
+    console.warn(`GitHub REST request failed for ${endpoint}:`, error);
+    return fallback;
+  }
+};;
 
 export interface GitHubUser {
   login: string;
@@ -358,11 +379,11 @@ export async function getRecentRepoActivity(username: string): Promise<GitHubAct
 }
 
 async function getRepoCommits(fullName: string): Promise<GitHubCommitItem[]> {
-  return fetchGitHubREST(`/repos/${fullName}/commits?per_page=5`);
+  return fetchGitHubRESTSafe(`/repos/${fullName}/commits?per_page=5`, []);
 }
 
 async function getRepoStargazers(fullName: string): Promise<GitHubStargazerItem[]> {
-  return fetchGitHubREST(`/repos/${fullName}/stargazers?per_page=5`, {
+  return fetchGitHubRESTSafe(`/repos/${fullName}/stargazers?per_page=5`, [], {
     headers: {
       Accept: 'application/vnd.github.star+json',
     },
@@ -370,7 +391,7 @@ async function getRepoStargazers(fullName: string): Promise<GitHubStargazerItem[
 }
 
 async function getRepoForks(fullName: string): Promise<GitHubForkItem[]> {
-  return fetchGitHubREST(`/repos/${fullName}/forks?sort=newest&per_page=5`);
+  return fetchGitHubRESTSafe(`/repos/${fullName}/forks?sort=newest&per_page=5`, []);
 }
 
 const CONTRIBUTIONS_QUERY = gql`

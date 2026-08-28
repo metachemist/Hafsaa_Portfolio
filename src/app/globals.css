@@ -102,8 +102,12 @@
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
   }
-  html {
-    scroll-behavior: smooth;
+  /* Smooth scrolling is handled by Lenis (see SmoothScroll.tsx).
+     Keep a native fallback only for visitors who opt out of Lenis. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
   h1, h2, h3 {
     font-family: var(--font-serif), "Playfair Display", Georgia, serif;

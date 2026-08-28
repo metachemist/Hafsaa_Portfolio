@@ -31,6 +31,7 @@ const certifications = [
 const languages = [
   { name: 'Urdu', level: 'Native' },
   { name: 'English', level: 'Professional' },
+  { name: 'Japanese', level: 'Elementary' },
 ];
 
 const fadeUp = (delay = 0) => ({

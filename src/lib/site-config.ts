@@ -3,7 +3,7 @@ export const siteConfig = {
   name: 'Hafsa Shahid',
   role: 'AI Engineer & Automation Specialist',
   bio: 'AI Fullstack Engineer shipping LLM-powered applications, autonomous agents, and n8n automation pipelines to production. Proficient in TypeScript, Python, Next.js, FastAPI, and PostgreSQL, with deep hands-on experience in RAG, prompt engineering, agentic workflows, and multi-platform API integration.',
-  email: 'hafsa@brainlytics.net',
+  email: 'hafsahere01@gmail.com',
   location: 'Karachi, Pakistan',
   githubUsername: 'metachemist',
   linkedinUrl: 'https://www.linkedin.com/in/hafsashahid03/',

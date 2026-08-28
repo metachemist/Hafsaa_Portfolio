@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { siteConfig } from '@/lib/site-config';
+import { RevealHeading } from './RevealHeading';
 
 interface FeaturedProject {
   name: string;
@@ -14,14 +15,6 @@ interface FeaturedProject {
 }
 
 const featuredProjects: FeaturedProject[] = [
-  {
-    name: 'Full-Time Employee: Autonomous AI Agent',
-    description:
-      'A perception-planning-execution autonomous agent: PM2-managed Python watchers monitor Gmail and file drops, feed a Claude Code planning engine that classifies inputs and drafts action plans, and sync state to an Obsidian vault.',
-    tags: ['autonomous-agent', 'python', 'claude-api', 'playwright'],
-    stack: ['Python', 'Claude Code', 'Gmail API', 'LinkedIn API', 'Playwright', 'Odoo CRM', 'PM2', 'Docker'],
-    highlight: 'Dispatches actions across 6 platforms with file-based human-in-the-loop gating and JSONL audit logging.',
-  },
   {
     name: 'AI-Powered B2B Proposal Engine',
     description:
@@ -245,8 +238,13 @@ export function ProjectsSection({ username }: ProjectsSectionProps) {
     return () => { isActive = false; window.clearInterval(id); };
   }, [username]);
 
+  const featuredRepos = new Set([
+    'hybrid-retrieval-based-conversational-assistant-for-university-admissions',
+    'full-time-employee',
+  ]);
+
   const filtered = projects
-    .filter((p) => !p.fork && !p.archived && p.name !== 'portfolio')
+    .filter((p) => !p.fork && !p.archived && featuredRepos.has(p.name.toLowerCase()))
     .sort((a, b) => {
       if (filter === 'starred') return b.stargazers_count - a.stargazers_count;
       if (filter === 'recent') return new Date(b.pushed_at).getTime() - new Date(a.pushed_at).getTime();
@@ -258,10 +256,8 @@ export function ProjectsSection({ username }: ProjectsSectionProps) {
     <section id="projects" className="py-24 px-6" style={{ borderTop: '1px solid var(--ed-border)' }}>
       <div className="container mx-auto max-w-6xl">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-14">
-          <motion.h2
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+          <RevealHeading
+            text="Projects."
             style={{
               fontFamily: 'var(--font-serif), Playfair Display, serif',
               fontSize: 'clamp(2.5rem, 5vw, 4rem)',
@@ -269,9 +265,7 @@ export function ProjectsSection({ username }: ProjectsSectionProps) {
               color: 'var(--ed-text)',
               lineHeight: 1,
             }}
-          >
-            Projects.
-          </motion.h2>
+          />
 
           <motion.div
             initial={{ opacity: 0 }}

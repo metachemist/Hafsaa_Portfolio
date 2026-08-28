@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Playfair_Display, DM_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import { SmoothScroll } from "@/components/SmoothScroll";
 import { siteConfig } from "@/lib/site-config";
 
 const playfair = Playfair_Display({
@@ -65,7 +66,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className={`${playfair.variable} ${dmSans.variable} ${jetbrainsMono.variable}`}>
-      <body className="antialiased">
+      <body className="antialiased" suppressHydrationWarning>
+        <SmoothScroll />
         {children}
         <Toaster />
       </body>
