@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { RevealHeading } from './RevealHeading';
 
 interface ContactSectionProps {
   email: string;
@@ -31,16 +32,11 @@ export function ContactSection({ email, github, linkedin, location }: ContactSec
               Contact
             </motion.p>
 
-            <motion.h2
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.05 }}
+            <RevealHeading
+              text="Thank you."
               className="text-5xl md:text-6xl font-semibold mb-6 leading-tight"
               style={{ fontFamily: 'var(--font-serif), Playfair Display, serif', color: 'var(--ed-text)' }}
-            >
-              Thank you.
-            </motion.h2>
+            />
 
             <motion.p
               initial={{ opacity: 0, y: 12 }}

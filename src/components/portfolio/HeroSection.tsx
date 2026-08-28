@@ -1,6 +1,7 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
+import { useRef } from 'react';
 import Image from 'next/image';
 import { siteConfig } from '@/lib/site-config';
 
@@ -14,9 +15,26 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ name, title, bio, avatarUrl, githubUrl, resumeUrl }: HeroSectionProps) {
+  const sectionRef = useRef<HTMLElement>(null);
+  const reduceMotion = useReducedMotion();
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], [0, -90]);
+  const opacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.96]);
+  const parallaxStyle = reduceMotion ? undefined : { y, opacity, scale };
+
   return (
-    <section id="hero" className="relative min-h-screen flex flex-col justify-center px-6 pt-24 pb-20">
-      <div className="container mx-auto max-w-6xl">
+    <section
+      ref={sectionRef}
+      id="hero"
+      className="relative min-h-screen flex flex-col justify-center px-6 pt-24 pb-20"
+    >
+      <motion.div className="container mx-auto max-w-6xl" style={parallaxStyle}>
 
         {/* Editorial masthead: huge "Portfolio" title */}
         <div className="mb-10 pb-8" style={{ borderBottom: '1px solid var(--ed-border)' }}>
@@ -225,7 +243,7 @@ export function HeroSection({ name, title, bio, avatarUrl, githubUrl, resumeUrl 
             style={{ background: 'linear-gradient(to bottom, transparent, var(--ed-muted))' }}
           />
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 }

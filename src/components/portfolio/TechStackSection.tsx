@@ -2,21 +2,16 @@
 
 import { motion } from 'framer-motion';
 import {
-  SiNextdotjs, SiReact, SiTailwindcss, SiShadcnui, SiAngular, SiHtml5, SiCss,
+  SiNextdotjs, SiReact, SiTailwindcss, SiHtml5, SiCss,
   SiFastapi, SiNodedotjs,
-  SiTypescript, SiJavascript, SiPython, SiC, SiCplusplus,
-  SiPostgresql, SiPrisma,
-  SiOpenai, SiClaude,
-  SiVercel, SiDocker,
+  SiTypescript, SiJavascript, SiPython, SiC,
+  SiPostgresql, SiSupabase,
+  SiClaude, SiHuggingface,
+  SiVercel, SiDocker, SiRender,
   SiGit, SiGithub, SiLinux, SiPostman,
 } from 'react-icons/si';
 import { FaJava } from 'react-icons/fa';
-
-const QdrantIcon = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
-    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-  </svg>
-);
+import { RevealHeading } from './RevealHeading';
 
 const N8nIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" className={className} fill="currentColor">
@@ -39,8 +34,6 @@ const stack: Tech[] = [
   { name: 'Next.js', category: 'Frontend', icon: SiNextdotjs, color: '#ffffff' },
   { name: 'React', category: 'Frontend', icon: SiReact, color: '#61DAFB' },
   { name: 'TailwindCSS', category: 'Frontend', icon: SiTailwindcss, color: '#06B6D4' },
-  { name: 'ShadCN UI', category: 'Frontend', icon: SiShadcnui, color: '#ffffff' },
-  { name: 'Angular', category: 'Frontend', icon: SiAngular, color: '#DD0031' },
   { name: 'HTML5', category: 'Frontend', icon: SiHtml5, color: '#E34F26' },
   { name: 'CSS3', category: 'Frontend', icon: SiCss, color: '#1572B6' },
   { name: 'FastAPI', category: 'Backend', icon: SiFastapi, color: '#009688' },
@@ -50,16 +43,15 @@ const stack: Tech[] = [
   { name: 'Python', category: 'Languages', icon: SiPython, color: '#3776AB' },
   { name: 'Java', category: 'Languages', icon: FaJava, color: '#007396' },
   { name: 'C', category: 'Languages', icon: SiC, color: '#A8B9CC' },
-  { name: 'C++', category: 'Languages', icon: SiCplusplus, color: '#00599C' },
+  { name: 'PostgreSQL', category: 'Database', icon: SiPostgresql, color: '#4169E1' },
   { name: 'Neon DB', category: 'Database', icon: SiPostgresql, color: '#4169E1' },
-  { name: 'Prisma', category: 'Database', icon: SiPrisma, color: '#6366f1' },
-  { name: 'Qdrant', category: 'Database', icon: QdrantIcon, color: '#E43B44' },
-  { name: 'OpenAI', category: 'AI/ML', icon: SiOpenai, color: '#412991' },
+  { name: 'Supabase', category: 'Database', icon: SiSupabase, color: '#3FCF8E' },
   { name: 'Claude', category: 'AI/ML', icon: SiClaude, color: '#D97757' },
-  { name: 'Agents SDK', category: 'AI/ML', icon: SiOpenai, color: '#10A37F' },
+  { name: 'Hugging Face', category: 'AI/ML', icon: SiHuggingface, color: '#FFD21E' },
+  { name: 'n8n', category: 'AI/ML', icon: N8nIcon, color: '#EA4B71' },
   { name: 'Vercel', category: 'Cloud & DevOps', icon: SiVercel, color: '#ffffff' },
   { name: 'Docker', category: 'Cloud & DevOps', icon: SiDocker, color: '#2496ED' },
-  { name: 'n8n', category: 'Tools', icon: N8nIcon, color: '#EA4B71' },
+  { name: 'Render', category: 'Cloud & DevOps', icon: SiRender, color: '#ffffff' },
   { name: 'Postman', category: 'Tools', icon: SiPostman, color: '#FF6C37' },
   { name: 'Git', category: 'Tools', icon: SiGit, color: '#F05032' },
   { name: 'GitHub', category: 'Tools', icon: SiGithub, color: '#ffffff' },
@@ -81,10 +73,8 @@ export function TechStackSection({ username: _username }: TechStackSectionProps)
   return (
     <section id="techstack" className="py-24 px-6" style={{ borderTop: '1px solid var(--ed-border)' }}>
       <div className="container mx-auto max-w-6xl">
-        <motion.h2
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+        <RevealHeading
+          text="Skills."
           style={{
             fontFamily: 'var(--font-serif), Playfair Display, serif',
             fontSize: 'clamp(2.5rem, 5vw, 4rem)',
@@ -93,9 +83,7 @@ export function TechStackSection({ username: _username }: TechStackSectionProps)
             lineHeight: 1,
             marginBottom: '3rem',
           }}
-        >
-          Skills.
-        </motion.h2>
+        />
 
         <div className="space-y-10">
           {categoryOrder.map((category, catIdx) => {

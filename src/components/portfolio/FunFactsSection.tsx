@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { RevealHeading } from './RevealHeading';
 
 const facts = [
   { n: '01', text: 'I started coding during lockdown and have not stopped since.' },
@@ -14,10 +15,8 @@ export function FunFactsSection() {
   return (
     <section id="funfacts" className="py-24 px-6" style={{ borderTop: '1px solid var(--ed-border)' }}>
       <div className="container mx-auto max-w-6xl">
-        <motion.h2
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+        <RevealHeading
+          text="Fun Facts."
           style={{
             fontFamily: 'var(--font-serif), Playfair Display, serif',
             fontSize: 'clamp(2.5rem, 5vw, 4rem)',
@@ -26,11 +25,9 @@ export function FunFactsSection() {
             lineHeight: 1,
             marginBottom: '3rem',
           }}
-        >
-          Fun Facts.
-        </motion.h2>
+        />
 
-        <div className="space-y-0" style={{ borderTop: '1px solid var(--ed-border)' }}>
+        <div style={{ borderTop: '1px solid var(--ed-border)' }}>
           {facts.map((fact, i) => (
             <motion.div
               key={fact.n}
@@ -38,18 +35,23 @@ export function FunFactsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.07 }}
-              className="flex items-start gap-8 py-5"
+              className="flex items-baseline gap-8 py-6"
               style={{ borderBottom: '1px solid var(--ed-border)' }}
             >
               <span
-                className="text-xs shrink-0 w-6 mt-0.5"
-                style={{ color: 'var(--ed-muted)', fontFamily: 'var(--font-mono), monospace', opacity: 0.5 }}
+                className="text-sm shrink-0 w-7"
+                style={{ color: 'var(--ed-accent)', fontFamily: 'var(--font-mono), monospace', opacity: 0.6 }}
               >
                 {fact.n}
               </span>
               <p
-                className="text-base leading-relaxed"
-                style={{ color: 'var(--ed-text)', fontFamily: 'var(--font-sans), sans-serif', maxWidth: '560px', lineHeight: '1.7' }}
+                style={{
+                  color: 'var(--ed-text)',
+                  fontFamily: 'var(--font-serif), Playfair Display, serif',
+                  fontSize: '1.0625rem',
+                  fontStyle: 'italic',
+                  lineHeight: '1.75',
+                }}
               >
                 {fact.text}
               </p>
