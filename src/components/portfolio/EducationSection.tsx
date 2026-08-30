@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { RevealHeading } from './RevealHeading';
 
 const education = [
   {
@@ -43,8 +44,20 @@ const fadeUp = (delay = 0) => ({
 
 export function EducationSection() {
   return (
-    <section id="education" className="py-24 px-6">
+    <section id="education" className="py-24 px-6" style={{ borderTop: '1px solid var(--ed-border)' }}>
       <div className="container mx-auto max-w-6xl">
+
+        <RevealHeading
+          text="Background."
+          style={{
+            fontFamily: 'var(--font-serif), Playfair Display, serif',
+            fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+            fontWeight: 600,
+            color: 'var(--ed-text)',
+            lineHeight: 1,
+            marginBottom: '3.5rem',
+          }}
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
 

@@ -60,11 +60,7 @@ const stack: Tech[] = [
 
 const categoryOrder = ['Frontend', 'Backend', 'Languages', 'Database', 'AI/ML', 'Cloud & DevOps', 'Tools'];
 
-interface TechStackSectionProps {
-  username: string;
-}
-
-export function TechStackSection({ username: _username }: TechStackSectionProps) {
+export function TechStackSection() {
   const grouped = categoryOrder.reduce((acc, cat) => {
     acc[cat] = stack.filter((t) => t.category === cat);
     return acc;

@@ -15,16 +15,16 @@ import { siteConfig } from '@/lib/site-config';
 
 const sections = [
   { id: 'hero', label: 'Home' },
-  { id: 'education', label: 'About' },
+  { id: 'projects', label: 'Work' },
   { id: 'techstack', label: 'Skills' },
-  { id: 'projects', label: 'Projects' },
+  { id: 'education', label: 'Background' },
   { id: 'contact', label: 'Contact' },
 ];
 
 export default function Home() {
   return (
     <main style={{ background: 'var(--ed-bg)', minHeight: '100vh' }}>
-      <Navigation sections={sections} githubUrl={siteConfig.githubUrl} email={siteConfig.email} />
+      <Navigation sections={sections} />
 
       <HeroSection
         name={siteConfig.name}
@@ -35,17 +35,21 @@ export default function Home() {
         resumeUrl={siteConfig.resumeUrl}
       />
 
-      <EducationSection />
-
-      <TechStackSection username={siteConfig.githubUsername} />
-
+      {/* Proof of work first: projects earn the interview. */}
       <ProjectsSection username={siteConfig.githubUsername} />
 
+      {/* Skills land harder once the recruiter has seen them used above. */}
+      <TechStackSection />
+
+      {/* GitHub activity as a credibility booster, grouped together. */}
       <StatsDashboard username={siteConfig.githubUsername} />
 
       <ContributionHeatmap username={siteConfig.githubUsername} />
 
       <ActivityFeed username={siteConfig.githubUsername} />
+
+      {/* Supporting credentials after the case is made. */}
+      <EducationSection />
 
       <FunFactsSection />
 

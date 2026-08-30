@@ -26,46 +26,6 @@ const languageColors: Record<string, string> = {
   Jupyter: '#F37626',
 };
 
-const topicMap: Record<string, { category: string; icon: string }> = {
-  react: { category: 'Framework', icon: 'react' },
-  nextjs: { category: 'Framework', icon: 'nextjs' },
-  'next.js': { category: 'Framework', icon: 'nextjs' },
-  nodejs: { category: 'Runtime', icon: 'nodejs' },
-  node: { category: 'Runtime', icon: 'nodejs' },
-  tailwindcss: { category: 'Styling', icon: 'tailwindcss' },
-  tailwind: { category: 'Styling', icon: 'tailwindcss' },
-  mongodb: { category: 'Database', icon: 'mongodb' },
-  postgresql: { category: 'Database', icon: 'postgresql' },
-  postgres: { category: 'Database', icon: 'postgresql' },
-  redis: { category: 'Database', icon: 'redis' },
-  firebase: { category: 'Backend', icon: 'firebase' },
-  graphql: { category: 'API', icon: 'graphql' },
-  docker: { category: 'DevOps', icon: 'docker' },
-  kubernetes: { category: 'DevOps', icon: 'kubernetes' },
-  aws: { category: 'Cloud', icon: 'amazonwebservices' },
-  azure: { category: 'Cloud', icon: 'azure' },
-  vercel: { category: 'Cloud', icon: 'vercel' },
-  openai: { category: 'AI', icon: 'openai' },
-  tensorflow: { category: 'AI', icon: 'tensorflow' },
-  pytorch: { category: 'AI', icon: 'pytorch' },
-  fastapi: { category: 'Framework', icon: 'fastapi' },
-  django: { category: 'Framework', icon: 'django' },
-  flask: { category: 'Framework', icon: 'flask' },
-  angular: { category: 'Framework', icon: 'angular' },
-  express: { category: 'Framework', icon: 'express' },
-  prisma: { category: 'ORM', icon: 'prisma' },
-  git: { category: 'Tool', icon: 'git' },
-  github: { category: 'Tool', icon: 'github' },
-  linux: { category: 'OS', icon: 'linux' },
-  figma: { category: 'Design', icon: 'figma' },
-  shadcn: { category: 'UI Library', icon: 'react' },
-  framer: { category: 'Animation', icon: 'react' },
-  ai: { category: 'AI', icon: 'openai' },
-  'machine-learning': { category: 'AI', icon: 'tensorflow' },
-  'deep-learning': { category: 'AI', icon: 'pytorch' },
-  api: { category: 'API', icon: 'graphql' },
-};
-
 const getGitHubToken = (): string | null => process.env.GITHUB_TOKEN || null;
 
 const createRestHeaders = (headers?: HeadersInit): HeadersInit => {
@@ -588,57 +548,4 @@ export async function getUserStats(username: string): Promise<GitHubStats> {
     contributionsByYear: contributions.contributionsByYear,
     languages,
   };
-}
-
-export async function detectTechStack(
-  repos: GitHubRepo[]
-): Promise<{ name: string; category: string; icon: string }[]> {
-  const techStack = new Map<string, { name: string; category: string; icon: string }>();
-
-  const languageMap: Record<string, { category: string; icon: string }> = {
-    TypeScript: { category: 'Language', icon: 'typescript' },
-    JavaScript: { category: 'Language', icon: 'javascript' },
-    Python: { category: 'Language', icon: 'python' },
-    Java: { category: 'Language', icon: 'java' },
-    'C++': { category: 'Language', icon: 'cplusplus' },
-    C: { category: 'Language', icon: 'c' },
-    Go: { category: 'Language', icon: 'go' },
-    Rust: { category: 'Language', icon: 'rust' },
-    Ruby: { category: 'Language', icon: 'ruby' },
-    PHP: { category: 'Language', icon: 'php' },
-    Swift: { category: 'Language', icon: 'swift' },
-    Kotlin: { category: 'Language', icon: 'kotlin' },
-    HTML: { category: 'Markup', icon: 'html5' },
-    CSS: { category: 'Styling', icon: 'css3' },
-    SCSS: { category: 'Styling', icon: 'sass' },
-    Shell: { category: 'Scripting', icon: 'bash' },
-    Vue: { category: 'Framework', icon: 'vue' },
-    Svelte: { category: 'Framework', icon: 'svelte' },
-  };
-
-  for (const repo of repos) {
-    if (repo.language && languageMap[repo.language]) {
-      const tech = languageMap[repo.language];
-      techStack.set(repo.language, {
-        name: repo.language,
-        category: tech.category,
-        icon: tech.icon,
-      });
-    }
-
-    for (const topic of repo.topics || []) {
-      const lowerTopic = topic.toLowerCase();
-
-      if (topicMap[lowerTopic] && !techStack.has(topic)) {
-        const tech = topicMap[lowerTopic];
-        techStack.set(topic, {
-          name: topic.charAt(0).toUpperCase() + topic.slice(1),
-          category: tech.category,
-          icon: tech.icon,
-        });
-      }
-    }
-  }
-
-  return Array.from(techStack.values());
 }

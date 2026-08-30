@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
+
+const subscribe = () => () => {};
 
 /**
  * Returns false during SSR and the first client render, then true.
@@ -10,7 +12,9 @@ import { useEffect, useState } from 'react';
  * animates it out of its initial hidden state.
  */
 export function useHasMounted() {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  return mounted;
+  return useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false,
+  );
 }

@@ -5,11 +5,9 @@ import { useState, useEffect } from 'react';
 
 interface NavigationProps {
   sections: { id: string; label: string }[];
-  githubUrl: string;
-  email?: string;
 }
 
-export function Navigation({ sections, githubUrl: _githubUrl, email }: NavigationProps) {
+export function Navigation({ sections }: NavigationProps) {
   const [activeSection, setActiveSection] = useState('hero');
   const [scrolled, setScrolled] = useState(false);
 
