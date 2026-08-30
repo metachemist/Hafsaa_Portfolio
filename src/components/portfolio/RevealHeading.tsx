@@ -3,6 +3,7 @@
 import { Fragment } from 'react';
 import { motion, useReducedMotion, type Variants } from 'framer-motion';
 import type { CSSProperties, ElementType } from 'react';
+import { useHasMounted } from '@/hooks/use-has-mounted';
 
 interface RevealHeadingProps {
   text: string;
@@ -29,7 +30,12 @@ export function RevealHeading({
   style,
   stagger = 0.08,
 }: RevealHeadingProps) {
-  const reduceMotion = useReducedMotion();
+  // `useReducedMotion()` is always false on the server, so gate it behind mount
+  // to keep the first client render identical to the SSR markup — otherwise the
+  // hydration mismatch leaves the words frozen in their hidden (clipped) state.
+  const prefersReducedMotion = useReducedMotion();
+  const hasMounted = useHasMounted();
+  const reduceMotion = prefersReducedMotion && hasMounted;
   const words = text.split(' ');
 
   if (reduceMotion) {
