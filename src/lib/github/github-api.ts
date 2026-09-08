@@ -72,20 +72,24 @@ const fetchGitHubREST = async (endpoint: string, options: RequestInit = {}) => {
  * request fails. Used for supplementary activity data (commits, stars, forks)
  * where a single forbidden or empty endpoint should not fail the whole feed —
  * e.g. the stargazers endpoint returns 403 for fine-grained personal access
- * tokens, and /commits returns 409 for empty repositories.
+ * tokens, and /commits returns 409 for empty repositories. Pass `silent: true`
+ * for calls where such a failure is expected so it doesn't spam the console.
  */
 const fetchGitHubRESTSafe = async <T>(
   endpoint: string,
   fallback: T,
-  options: RequestInit = {}
+  options: RequestInit = {},
+  silent = false
 ): Promise<T> => {
   try {
     return await fetchGitHubREST(endpoint, options);
   } catch (error) {
-    console.warn(`GitHub REST request failed for ${endpoint}:`, error);
+    if (!silent) {
+      console.warn(`GitHub REST request failed for ${endpoint}:`, error);
+    }
     return fallback;
   }
-};;
+};
 
 export interface GitHubUser {
   login: string;
@@ -343,11 +347,16 @@ async function getRepoCommits(fullName: string): Promise<GitHubCommitItem[]> {
 }
 
 async function getRepoStargazers(fullName: string): Promise<GitHubStargazerItem[]> {
-  return fetchGitHubRESTSafe(`/repos/${fullName}/stargazers?per_page=5`, [], {
-    headers: {
-      Accept: 'application/vnd.github.star+json',
+  return fetchGitHubRESTSafe(
+    `/repos/${fullName}/stargazers?per_page=5`,
+    [],
+    {
+      headers: {
+        Accept: 'application/vnd.github.star+json',
+      },
     },
-  });
+    true
+  );
 }
 
 async function getRepoForks(fullName: string): Promise<GitHubForkItem[]> {
