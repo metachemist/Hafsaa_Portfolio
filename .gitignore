@@ -41,13 +41,5 @@ yarn-error.log*
 next-env.d.ts
 local-*
 .claude
-.z-ai-config
 dev.log
-/.zscripts/dev.out.log
-/.zscripts/dev.pid
-test
-prompt
-
 server.log
-# Skills directory
-/skills/

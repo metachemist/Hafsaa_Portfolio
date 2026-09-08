@@ -241,6 +241,7 @@ export function ProjectsSection({ username }: ProjectsSectionProps) {
   const featuredRepos = new Set([
     'hybrid-retrieval-based-conversational-assistant-for-university-admissions',
     'full-time-employee',
+    'nlp-based-grammar-and-spelling-error-detection',
   ]);
 
   const filtered = projects

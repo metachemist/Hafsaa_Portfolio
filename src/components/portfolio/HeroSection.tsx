@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion
 import { useRef } from 'react';
 import Image from 'next/image';
 import { siteConfig } from '@/lib/site-config';
+import { useHasMounted } from '@/hooks/use-has-mounted';
 
 interface HeroSectionProps {
   name: string;
@@ -16,7 +17,12 @@ interface HeroSectionProps {
 
 export function HeroSection({ name, title, bio, avatarUrl, githubUrl, resumeUrl }: HeroSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
-  const reduceMotion = useReducedMotion();
+  // `useReducedMotion()` reports false during SSR; gate it behind mount so the
+  // first client render matches the server and hydration doesn't leave the
+  // parallax wrapper (and the headings inside it) stuck at opacity 0.
+  const prefersReducedMotion = useReducedMotion();
+  const hasMounted = useHasMounted();
+  const reduceMotion = prefersReducedMotion && hasMounted;
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,

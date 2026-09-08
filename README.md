@@ -49,5 +49,4 @@ npm run start
 
 ## Notes
 
-- SQLite and Prisma are present, but the current portfolio UI does not depend on them.
 - If `GITHUB_TOKEN` is missing, contribution-backed sections will show an honest error instead of synthetic data.

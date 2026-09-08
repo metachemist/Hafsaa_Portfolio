@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display, DM_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "@/components/ui/toaster";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { siteConfig } from "@/lib/site-config";
 
@@ -69,7 +68,6 @@ export default function RootLayout({
       <body className="antialiased" suppressHydrationWarning>
         <SmoothScroll />
         {children}
-        <Toaster />
       </body>
     </html>
   );

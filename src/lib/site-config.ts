@@ -13,5 +13,3 @@ export const siteConfig = {
   resumeUrl: '/resume.pdf',
   refreshIntervalMs: 60_000,
 } as const;
-
-export const currentContributionYear = new Date().getUTCFullYear();
